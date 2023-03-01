@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Search Results</title>
+</head>
+<body>
+	<h1>Search Results</h1>
+	{% if results %}
+		<ul>
+			{% for i in range(0,2) %}
+				<li>
+					<a href="{{ results['Links'][i] }}">{{ results['Video Title'][i] }}</a>
+					<p>Channel: {{ results['Channel Name'][i] }}</p>
+					<p>Duration: {{ results['Duration'][i]}}</p>
+					<p>Views: {{ results['Views'][i] }}</p>
+					<p>Likes: {{ results['Likes'][i] }}</p>
+					<p>Comments: {{ results['No. of Comments'][i] }}</p>
+				</li>
+			{% endfor %}
+		</ul>
+	{% else %}
+		<p>No results found.</p>
+	{% endif %}
+</body>
+</html>
