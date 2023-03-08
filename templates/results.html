@@ -2,12 +2,70 @@
 <html>
 <head>
 	<title>Search Results</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+			background-color: #f8f8f8;
+		}
+		h1 {
+			margin-top: 20px;
+			margin-bottom: 30px;
+			text-align: center;
+			font-size: 36px;
+		}
+		ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+		}
+		li {
+			margin: 10px;
+			background-color: #ffffff;
+			box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+			border-radius: 5px;
+			padding: 20px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			max-width: 400px;
+			text-align: center;
+		}
+		a {
+			font-size: 20px;
+			font-weight: bold;
+			text-decoration: none;
+			color: #333333;
+			margin-bottom: 10px;
+		}
+		p {
+			font-size: 16px;
+			color: #666666;
+			margin: 5px 0;
+		}
+		button {
+			margin: 20px auto;
+			display: block;
+			padding: 10px 20px;
+			font-size: 16px;
+			background-color: #4CAF50;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+	</style>
 </head>
 <body>
 	<h1>Search Results</h1>
+	
 	{% if results %}
 		<ul>
-			{% for i in range(0,2) %}
+			{% for i in range(0,results['num_vid']) %}
 				<li>
 					<a href="{{ results['Links'][i] }}">{{ results['Video Title'][i] }}</a>
 					<p>Channel: {{ results['Channel Name'][i] }}</p>
@@ -19,7 +77,21 @@
 			{% endfor %}
 		</ul>
 	{% else %}
-		<p>No results found.</p>
+		<p style="text-align:center;">No results found.</p>
 	{% endif %}
+
+	<button onclick="download()">Download data.csv</button>
+
+	<script>
+		function download() {
+			const url = "../data.csv";
+			const a = document.createElement("a");
+			a.href = url;
+			a.download = "data.csv";
+			document.body.appendChild(a);
+			a.click();
+			document.body.removeChild(a);
+		}
+	</script>
 </body>
 </html>
