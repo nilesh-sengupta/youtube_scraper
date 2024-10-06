@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Comments</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="../static/comments.css">
+</head>
+<body>
+	<!-- <div class="container">
+		
+	</div> -->
+	<div class="container">
+		<div class="header">
+			<h2>Comments</h2>
+			<div style="display: flex; width: 50%; gap: 15px;">
+				<button class = "btn"onclick="download()">Download comments.csv</button>
+				<button class = "btn"onclick="sentiment()">Analyse Sentiment (BERT)</button>
+				<button class = "btn"onclick="sentimentgpt()">Analyse Sentiment (GPT)</button>
+			</div>
+		</div>
+		<ul class="comment-list">
+			{% for comment in comments %}
+			<div class="comment">{{ comment }}</div>
+			{% endfor %}
+		</ul>
+	</div>
+	<script>
+		function sentiment(){
+		const url = 'http://127.0.0.1:5000/sentiment';
+		const a = document.createElement("a");
+		a.href = url;
+		document.body.appendChild(a);
+		a.click();
+		
+		}
+		function sentimentgpt(){
+		const url = 'http://127.0.0.1:5000/sentimentgpt';
+		const a = document.createElement("a");
+		a.href = url;
+		document.body.appendChild(a);
+		a.click();
+		
+		}
+		function download() {
+		const url = 'http://127.0.0.1:5000/downloadcomments';
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = "comments.csv";
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+	}
+	</script>
+</body>
+</html>

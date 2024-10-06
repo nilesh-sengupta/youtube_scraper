@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sentiment Analysis Results</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/he@1.2.0/he.js"></script>
+
+        <link rel="stylesheet" href="../static/sentiment.css" />
+    </head>
+    <body>
+        <!-- <canvas class= stats id="polarityPieChart" width="200" height="200"></canvas>
+    <p class="stats">Average Objectivity: <span id="averageObjectivity"></span></p>
+    <p class="stats">Average Subjectivity: <span id="averageSubjectivity"></span></p> -->
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const resultData = `[${'{{res|tojson|safe}}'}]`;
+
+                console.log(resultData);
+                const parsedData = resultData.replace(
+                    /&#(\d+);/g,
+                    function (match, dec) {
+                        return String.fromCharCode(dec);
+                    }
+                );
+
+                const data = parsedData
+                    .substring(2, parsedData.length - 2)
+                    .split('], [')
+                    .map((item) => item.split(', '));
+                const polarity = data[0].map((item) =>
+                    item.replace(/"/g, '').replace('[', '').replace(']', '')
+                );
+                const objectivity = data[1].map((item) => parseFloat(item));
+                const subjectivity = data[2].map((item) => parseFloat(item));
+                console.log(polarity);
+                console.log(objectivity);
+                console.log(subjectivity);
+
+                const positiveCount = polarity.filter(
+                    (val) => val.toLowerCase() === 'positive'
+                ).length;
+                const negativeCount = polarity.filter(
+                    (val) => val.toLowerCase() === 'negative'
+                ).length;
+                const totalPolarityCount = polarity.length;
+                const positivePercentage =
+                    (positiveCount / totalPolarityCount) * 100;
+                const negativePercentage =
+                    (negativeCount / totalPolarityCount) * 100;
+
+                const averageObjectivity =
+                    objectivity.reduce((acc, val) => acc + val, 0) /
+                    objectivity.length;
+                const averageSubjectivity =
+                    subjectivity.reduce((acc, val) => acc + val, 0) /
+                    subjectivity.length;
+
+                const ctx = document
+                    .getElementById('polarityPieChart')
+                    .getContext('2d');
+                const polarityPieChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Positive', 'Negative'],
+                        datasets: [
+                            {
+                                data: [positivePercentage, negativePercentage],
+                                backgroundColor: ['#1aff1a', '#ff4d4d'],
+                                borderWidth: 0,
+                            },
+                        ],
+                    },
+                    options: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    color: 'white',
+                                    size: 18,
+                                },
+                            },
+                        },
+                        responsive: false,
+                    },
+                });
+
+                document.getElementById('averageObjectivity').innerText =
+                    averageObjectivity.toFixed(2);
+                document.getElementById('averageSubjectivity').innerText =
+                    averageSubjectivity.toFixed(2);
+            });
+        </script>
+        <h1>Sentiment Analysis Results</h1>
+        <br />
+        <br />
+        <div class="top-section">
+            <div class="chart-container">
+                <canvas
+                    class="stats"
+                    id="polarityPieChart"
+                    width="500"
+                    height="500"
+                ></canvas>
+            </div>
+            <div class="stats">
+                <!-- <h3 class="stats">Average Objectivity: <span id="averageObjectivity"></span></h3> -->
+                <!-- <h3 class="stats">Average Subjectivity: <span id="averageSubjectivity"></span></h3> -->
+
+                <div class="statsBox" id="green">
+                    <div class="infoText" style="color: #8b9626ab">
+                        Average Objectivity
+                    </div>
+
+                    <div class="infoNumber" id="averageObjectivity"></div>
+
+                    <div class="info-desc" style="color: #8b9626ab">
+                        A measure of the degree of the quality or character of the comment being objective.
+                    </div>
+                </div>
+                <div class="statsBox" id="red">
+                    <div class="infoText" style="color: #e6ab08cf">
+                        Average Subjectivity
+                    </div>
+
+                    <div class="infoNumber" id="averageSubjectivity"></div>
+
+                    <div class="info-desc" style="color: #e6ab08cf">
+                        A measure of the degree of the quality or character of the comment being subjective.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="commentlist" id="table-view">
+            {% if res %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comment</th>
+                        <th>Polarity</th>
+                        <th>Subjectivity</th>
+                        <th>Objectivity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in range(0,res[4]) %}
+                    <tr>
+                        <td>{{ res[3][i] }}</td>
+
+                        {% if res[0][i] == "Positive" %}
+                        <td>
+                            <div class="pill-positive">{{ res[0][i] }}</div>
+                        </td>
+                        {% else %}
+                        <td>
+                            <div class="pill-negative">{{ res[0][i] }}</div>
+                        </td>
+                        {% endif %}
+                        <td>{{ res[1][i] }}</td>
+                        <td>{{ res[2][i] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p style="text-align: center">No results found.</p>
+            {% endif %}
+        </div>
+    </body>
+</html>

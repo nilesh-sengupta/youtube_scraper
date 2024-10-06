@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sentiment Analysis Results</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+			background-color: #031436;
+			color: white;
+			
+		}
+		h1 {
+			margin-top: 20px;
+			margin-bottom: 30px;
+			text-align: center;
+			font-size: 36px;
+		}
+		ul {
+			list-style: none;
+			padding: 0;
+			margin: 5px;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+		}
+		li {
+			margin: 10px;
+			background-color: #719bf6;
+			box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+			border-radius: 5px;
+			padding: 20px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			max-width: 400px;
+			text-align: center;
+		}
+		a {
+			font-size: 20px;
+			font-weight: bold;
+			text-decoration: none;
+			color: #333333;
+			margin-bottom: 10px;
+		}
+		p {
+			font-size: 16px;
+			color: #666666;
+			margin: 5px 0;
+		}
+		button {
+			margin: 20px auto;
+			display: block;
+			padding: 10px 20px;
+			font-size: 16px;
+			background-color: #4CAF50;
+			color: #002d8d;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+		.overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			z-index: 9999;
+		}
+
+		.spinner {
+			border: 4px solid rgba(0, 0, 0, 0.1);
+			border-left-color: #3498db;
+			border-radius: 50%;
+			width: 50px;
+			height: 50px;
+			animation: spin 1s ease-in-out infinite;
+		}
+
+		.label {
+			font-size: 18px;
+			color: #ffffff;
+			margin-top: 20px;
+			text-align: center;
+		}
+
+		@keyframes spin {
+			0% {
+				transform: rotate(0deg);
+			}
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+	</style>
+</head>
+<body>
+	<h1>Sentiment Analysis Results</h1>
+	<div id="table-view">
+		{% if res %}
+			<table>
+				<thead>
+					<tr>
+						<th>Comment</th>
+						<th>Sentiment</th>
+
+					</tr>
+				</thead>
+				<tbody>
+					{% for i in range(0,res[2]) %}
+						<tr>
+							<td>{{ res[1][i] }}</td>
+							<td>{{ res[0][i]}}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% else %}
+			<p style="text-align:center;">No results found.</p>
+		{% endif %}
+	</div>
+</body>
+</html>

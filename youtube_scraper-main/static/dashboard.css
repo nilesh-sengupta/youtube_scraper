@@ -1,0 +1,328 @@
+body {
+    background-color: #161625;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+#animation-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+h2 {
+    color: #ffffff;
+    margin-top: 80px;
+    margin-left: 20px;
+    animation: fadeIn 1.5s ease-out;
+    font-size: 90px;
+}
+
+.btn-description {
+    margin-top: 5px;
+    color: white;
+    animation: ease-in;
+    text-align: center;
+    font-size: 18px;
+}
+
+#parseItContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+.parseIt {
+    font-size: 30px;
+    color: #ffffff;
+    animation: riseIn 4s infinite;
+    position: relative;
+    opacity: 0;
+}
+
+.parseIt.left {
+    animation-delay: 1s;
+}
+
+@keyframes riseIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+    50% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes backgroundAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Additional styles for the background animation */
+#animation-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(-45deg, #0462c7, #0150a3, #519ef0, #3593f7);
+    background-size: 400% 400%;
+    animation: backgroundAnimation 15s infinite;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    /* justify-content: center; */
+    flex-direction: column;
+    align-items: center;
+}
+
+.btn-group {
+    position: relative;
+    top: 30%;
+    animation: slideIn 1s ease-out;
+    display: flex;
+    flex-direction: row;
+    width: 70%;
+    /* height: 100vh !important; */
+    /* position: relative; */
+    justify-content: center;
+    gap: 40px;
+    /* top: 300px; */
+    /* margin-top: 200px; */
+    align-items: center;
+}
+
+.title {
+    color: white;
+    font-family: 'Poppins', sans-serif !important;
+    font-size: 40px;
+    text-align: center;
+    margin-right: 40px;
+    margin-top: 110px;
+    margin-bottom: -150px;
+}
+
+.btn-primary,
+.btn-success {
+    /* width: 200px; */
+    margin: 10px;
+    position: relative;
+    font-size: 13px;
+    /* background-color: ; */
+    outline: none;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 15px;
+    font-family: 'Poppins', sans-serif;
+    transition: 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    scale: 1.1;
+    transition: 0.3s ease-in-out;
+    cursor: pointer;
+}
+.btn-success:hover {
+    scale: 1.1;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.item {
+    background-color: transparent;
+    box-shadow: 9px 15px 24px -12px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: 9px 15px 24px -12px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 9px 15px 24px -12px rgba(0, 0, 0, 0.75);
+    width: 300px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 13px;
+    background-color: #20203b;
+    border-radius: 5px;
+    font-family: monospace;
+    font-size: 10px !important;
+}
+
+#globe {
+    width: 40%;
+    /* background-color: yellow; */
+    position: relative;
+
+    bottom: 330px;
+}
+
+.left-landing {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    /* background-color: red; */
+}
+
+#scroll {
+    width: 150px;
+    height: 50px;
+    border-radius: 50px;
+    position: absolute;
+    /* left: 10%; */
+
+    outline: none;
+    font-family: 'Poppins', sans-serif;
+    border: none;
+    bottom: -100px;
+
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+
+#scroll:hover {
+    scale: 1.2;
+    transition: 0.2s ease-in-out;
+    /* background-color: ; */
+}
+
+.Stext {
+    font-size: 18px;
+    margin-top: 30px;
+    text-align: left;
+    font-family: monospace !important;
+}
+
+.landing {
+    width: 100vw;
+    height: 100% !important;
+    display: flex;
+    position: relative;
+    top: 100px;
+
+    flex-direction: row;
+
+    animation: fadeIn 1.5s ease-out;
+    color: #ededed;
+    font-family: 'Poppins', sans-serif;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.Htext {
+    font-size: 70px;
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.modal-content {
+    background-color: black !important;
+    color: white;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    border: none;
+}
+
+.modal-header{
+    border: none;
+}
+.modal-footer{
+    border: none;
+}
+
+.modalInput{
+    margin: 10px;
+    padding: 7px 13px;
+    background-color: rgb(47, 47, 47);
+    color: white;
+    outline: none;
+    width: 94%;
+    border: none;
+    border-radius: 7px;
+    font-family: "Poppins", sans-serif;
+}
+
+.modal-body::placeholder{
+    color: white;
+    font-family: "Poppins", sans-serif;
+}
+
+.progress{
+    margin-top: 20px;
+    background-color: rgb(47, 47, 47);;
+    width: 94%;
+    /* display: none; */
+    /* opacity: 0; */
+    margin-left: 13px;
+}
+
+.progress-bar{
+    background-color: rgb(127, 127, 127);
+}
+
+
+#estimated-time{
+    margin-left: 15px;
+    font-family: monospace;
+    font-size: 16px;
+    margin-top: 10px;
+    color: gray;
+}
+
+.modal-title{
+    font-family: "Poppins",sans-serif;
+    margin-left: 10px;
+}

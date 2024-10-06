@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PerSent</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script defer src="{{ url_for('static', filename='login.js') }}"></script>
+</head>
+<body>
+    
+    <div class="wrapper">
+        <div class="brewery">
+            <div class = "title">
+                Welcome to <br/>PerSent
+            </div>
+            <div class = "imgBox">
+                <img src="../static/illu.png" alt="">
+            </div>
+
+
+
+        </div>
+        <form class="login">
+            <p class="title">Log in</p>
+            <input type="text" placeholder="Username" autofocus/>
+            <i class="fa fa-user"></i>
+            <input type="password" placeholder="Password" />
+            <i class="fa fa-key"></i>
+            <a href="#">Forgot your password?</a>
+            <button>
+                <i class="spinner"></i>
+                <span class="state">Log in</span>
+            </button>
+        </form>
+        <!-- <footer><a target="blank" href="http://boudra.me/">boudra.me</a></footer> -->
+    </div>
+</body>
+</html>

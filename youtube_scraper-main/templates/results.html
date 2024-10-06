@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
+    <script src="https://kit.fontawesome.com/7f99148ddd.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../static/results.css">
+</head>
+<body>
+    <!-- <h1>Search Resultssss</h1> -->
+    <!-- <br>
+    <br> -->
+    <div id="analytics" class="analyticsBox">
+        <div class="title">Data Summary</div>
+        <div class="infoList" >
+            <div class="infoBox" id = "blue">
+                <div class="infoText">
+                    Max Views
+                </div>
+                <div id = "maxViews"  class="numbers">
+
+                </div>
+
+            </div>
+            <div class="infoBox" id = "red">
+                <div class="infoText">
+                    Min Views
+                </div>
+
+                <div id = "minViews" class="numbers">
+
+                </div>
+
+            </div>
+            <div class="infoBox" id="green">
+                <div class="infoText">
+                    Avg Views
+                </div>
+
+                <div id = "averageViews" class="numbers">
+
+                </div>
+
+            </div>
+            <div class="infoBox" id="grey">
+                <div class="infoText">
+                     Most viewed
+                </div>
+
+                <div id = "channelHighestViews" class="numbers">
+
+                </div>
+
+            </div>
+            <div class="infoBox" id = "yellow">
+                <div class="infoText">
+                    Least Viewed
+                </div>
+
+                <div id = "channelLowestViews" class="numbers">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+    <div style="width: 98vw; display: flex; justify-content: center; ">
+        <div class="chart-container">
+            <canvas id="viewsChart" class="chart"></canvas>
+        </div>
+
+    </div>
+    
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const charts = document.querySelectorAll('.chart');
+        // charts.forEach(chart => {
+        //     chart.style.width = '350px'; // Adjust the width as needed
+        //     chart.style.height = '300px'; // Adjust the height as needed
+            
+        // });
+        const resultData = JSON.parse('{{ results | tojson | safe }}'); 
+        const viewsData = resultData['Views'];
+        const channelNames = resultData['Channel Name'];
+        const videoTitles = resultData['Video Title'];
+        const numVideos = resultData['num_vid'];
+        const publishedSince = resultData['Days since Upload'];
+        
+        const numericViewsArray = [];
+        const titles = [];
+        const publishedSinceArray = [];
+        console.log(viewsData)
+        for (const key in viewsData) {
+            if (viewsData.hasOwnProperty(key)) {
+                const stringValue = viewsData[key].toString();
+                const numericValue = parseFloat(stringValue.replace(/[^\d.-]/g, ''));
+                numericViewsArray.push(numericValue);
+            }
+        }
+        
+        for (const key in videoTitles) {
+            if (videoTitles.hasOwnProperty(key)) {  
+                const title = videoTitles[key];
+                
+                titles.push(title.slice(0,15));
+            }
+        }
+        for (const key in publishedSince) {
+            if (publishedSince.hasOwnProperty(key)) {  
+                const publishedSinceval = publishedSince[key];
+                publishedSinceArray.push(publishedSinceval);
+            }
+        }
+
+        console.log(titles)
+
+        const ctx = document.getElementById('viewsChart').getContext('2d');
+        const viewsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: titles,
+                datasets: [{
+                    label: 'Views vs Video Title',
+                    data: numericViewsArray,
+                    backgroundColor: '#0178f9',
+                    // borderColor: 'rgba(54, 162, 235, 1)',
+                    barThickness : 50,
+                    borderWidth: 1
+                }]
+            },
+            options: { 
+            legend: {
+                labels: {
+                    fontColor: "white",
+                    fontSize: 15,
+                    fontFamily : "monospace"
+                }
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        fontColor: "white",
+                        fontSize: 13,
+                        fontFamily : 'monospace',
+                        // stepSize: 1,
+                        beginAtZero: true
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                        fontColor: "white",
+                        fontSize: 14,
+                        fontFamily : "monospace",
+                        stepSize: 1,
+                        beginAtZero: true
+                    }
+                    // display : false
+                }]
+            }
+        }
+            
+
+   
+        });
+
+        // console.log(publishedSinceArray);
+        const numericPublishedSinceArray = publishedSinceArray.map(publishedSinceVal => {
+    if (typeof publishedSinceVal === 'string' && publishedSinceVal.trim() !== '') {
+        const regexResult = publishedSinceVal.match(/(\d+) (\w+) ago/);
+        if (regexResult) {
+            const value = parseInt(regexResult[1]);
+            const unit = regexResult[2];
+
+            switch (unit) {
+                case 'year':
+                case 'years':
+                    return value * 365;
+                case 'month':
+                case 'months':
+                    return value * 30;
+                case 'week':
+                case 'weeks':
+                    return value * 7;
+                case 'day':
+                case 'days':
+                    return value;
+                case 'hour':
+                case 'hours':
+                    return value / 24;
+                case 'minute':
+                case 'minutes':
+                    return value / (24 * 60);
+                case 'second':
+                case 'seconds':
+                    return value / (24 * 60 * 60);
+                default:
+                    return 0;
+            }
+        }
+    }
+    return 0; // Default value if no valid match is found
+});
+
+
+        
+
+function addCommasToNumber(number) {
+    let numberString = number.toString();
+    let result = '';
+    for (let i = numberString.length - 1, count = 0; i >= 0; i--, count++) {
+        result = numberString[i] + result;
+        if (count % 3 === 2 && i !== 0) {
+            result = ',' + result;
+        }
+    }
+    return result;
+}    
+        const totalViews = numericViewsArray.reduce((acc, curr) => acc + curr, 0);
+        const averageViews = Math.round(totalViews / numVideos);
+        const maxViews = Math.max(...numericViewsArray);
+        const minViews = Math.min(...numericViewsArray);
+
+        const maxIndex = numericViewsArray.indexOf(maxViews);
+        const minIndex = numericViewsArray.indexOf(minViews);
+        const channelHighestViews = channelNames[maxIndex];
+        const channelLowestViews = channelNames[minIndex];
+
+        document.getElementById('averageViews').textContent = addCommasToNumber(averageViews);
+        document.getElementById('maxViews').textContent = addCommasToNumber(maxViews);
+        document.getElementById('minViews').textContent = addCommasToNumber(minViews);
+        document.getElementById('channelHighestViews').textContent = channelHighestViews;
+        document.getElementById('channelLowestViews').textContent = channelLowestViews;
+    });
+</script>
+
+    <div class="view-toggle">
+        <br>
+        <br>
+        <button id="list-view-btn" class="active">List View</button>
+        <button id="table-view-btn">Table View</button>
+    </div>
+
+    <div id="list-view">
+        {% if results %}
+            <ul>
+                {% for i in range(0, results['num_vid']) %}
+                    <!-- <li>
+                        <a href="{{ results['Links'][i] }}">{{ results['Video Title'][i] }}</a>
+                        <p>Channel: {{ results['Channel Name'][i] }}</p>
+                        <p>Published: {{ results['Days since Upload'][i]}}</p>
+                        <p>Views: {{ results['Views'][i] }}</p>
+                        <button onclick="sendData('{{results['Links'][i] }}')">View Comments</button>
+                    </li> -->
+
+                    <div class="videoBox">
+                        <div class="videoTitle">{{ results['Video Title'][i] }}</div>
+
+                        <div class="four">
+                            <div class="tips">
+                                <i class="fa-regular fa-user icon"></i>
+                                {{ results['Channel Name'][i] }}
+                            </div>
+                            <div class="tips">
+                                <i class="fa-regular fa-calendar icon"></i>
+                                {{ results['Days since Upload'][i]}}
+                            </div>
+                            <div class="tips">
+                                <i class="fa-regular fa-eye icon"></i>
+                                {{ results['Views'][i] }}
+                            </div>
+
+                            <div class="btn-pair">
+                                <a href="https://{{ results['Links'][i] }}/" target="_blank">
+                                    <button>
+                                        Watch  
+                                    </button>
+                                </a>
+                                <button onclick="sendData('{{results['Links'][i] }}')">
+                                  Comments
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p style="text-align:center;">No results found.</p>
+        {% endif %}
+    </div>
+
+    <div id="table-view" style="display: none;">
+        {% if results %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Video Title</th>
+                        <th>Channel Name</th>
+                        <th>Published:</th>
+                        <th>Views</th>
+                        <th>Comments</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in range(0, results['num_vid']) %}
+                        <tr>
+                            <td><a href="https://{{ results['Links'][i] }}/">{{ results['Video Title'][i] }}</a></td>
+                            <td>{{ results['Channel Name'][i] }}</td>
+                            <td>{{ results['Days since Upload'][i] }}</td>
+                            <td>{{ results['Views'][i] }}</td>
+                            <td><div onclick="sendData('{{results['Links'][i] }}')">View Comments</div></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p style="text-align:center;">No results found.</p>
+        {% endif %}
+    </div>
+
+    <button onclick="download()">Download data.csv</button>
+
+    <script>
+        function download() {
+            const url = 'http://127.0.0.1:5000/download';
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "data.csv";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function sendData(link, comments) {
+            const overlay = document.createElement("div");
+            overlay.classList.add("overlay");
+            const spinner = document.createElement("div");
+            spinner.classList.add("spinner");
+            overlay.appendChild(spinner);
+            const label = document.createElement("div");
+            label.classList.add("label");
+            label.textContent = "Please wait while we fetch the comments";
+            overlay.appendChild(label);
+            document.body.appendChild(overlay);
+            $.ajax({
+                type: 'POST',
+                url: 'http://127.0.0.1:5000/comments',
+                data: { link: link},
+                success: function(response) {
+                    overlay.remove();
+                    window.history.pushState("", "", '/comments');
+                    $("body").html(response);
+                }
+            });
+        }
+
+        const listViewBtn = document.querySelector("#list-view-btn");
+        const tableViewBtn = document.querySelector("#table-view-btn");
+        const listView = document.querySelector("#list-view");
+        const tableView = document.querySelector("#table-view");
+
+        listViewBtn.addEventListener("click", function() {
+            if (!listViewBtn.classList.contains("active")) {
+                listViewBtn.classList.add("active");
+                tableViewBtn.classList.remove("active");
+                listView.style.display = "block";
+                tableView.style.display = "none";
+            }
+        });
+
+        tableViewBtn.addEventListener("click", function() {
+            if (!tableViewBtn.classList.contains("active")) {
+                tableViewBtn.classList.add("active");
+                listViewBtn.classList.remove("active");
+                tableView.style.display = "block";
+                listView.style.display = "none";
+            }
+        });
+
+        
+    </script>
+</body>
+</html>
